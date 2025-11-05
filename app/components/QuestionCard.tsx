@@ -3,6 +3,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
 import QuestionTag from "./QuestionTag";
+import Buttons from "./Buttons";
 
 export default function QuestionCard() {
   const [question, setQuestion] = useState("Loading...");
@@ -31,32 +32,37 @@ export default function QuestionCard() {
   }, []);
 
   return (
-    <div className="min-h-dvh flex items-center justify-center">
-      <div className="w-full max-w-2xl border rounded-2xl border-gray-200 p-8 bg-white m-6">
-        <div className="flex justify-between text-gray-400 text-xs tracking-widest mb-2">
-          <p>QUESTION 1/5</p>
-          <button
-            onClick={() => setShowDetails(!showDetails)}
-            className="border-[0.5px] rounded-3xl px-3"
-          >
-            DETAILS
-          </button>
-        </div>
-        <h1 className="text-4xl font-medium text-gray-900 mb-4 text-center">
-          {question}
-        </h1>
-        {showDetails && (
-          <div className="border rounded-2xl border-gray-200 p-4 mt-8">
-            <p className="text-gray-400 font-semibold text-sm">GERMAN </p>
-            <p className="mb-4">{questionGerman}</p>
-            <div className="text-gray-600 text-sm flex justify-between">
-              <p>Question By: {author}</p>
-              <p>Year: {year}</p>
-              <p>Episode: {episode}</p>
-              <QuestionTag></QuestionTag>
-            </div>
+    <div className="min-h-screen flex items-center justify-center px-6">
+      <div className="w-full max-w-3xl space-y-4">
+        <div className="border rounded-3xl border-gray-200 p-8 bg-white shadow-xl shadow-gray-200/80">
+          <div className="flex justify-between font-light text-gray-400 text-xs tracking-widest mb-8">
+            <p>QUESTION 1/5</p>
+            <button
+              onClick={() => setShowDetails(!showDetails)}
+              className="border-[0.5px] rounded-3xl px-3 font-medium"
+            >
+              DETAILS
+            </button>
           </div>
-        )}
+          <h1 className="text-4xl font-medium text-gray-900 mb-4">
+            {question}
+          </h1>
+          {showDetails && (
+            <div className="border rounded-2xl border-gray-200 p-4 mt-8">
+              <p className="text-gray-400 font-medium text-sm">GERMAN </p>
+              <p className="mb-4">{questionGerman}</p>
+              <div className="text-gray-600 text-sm grid grid-cols-3">
+                <QuestionTag
+                  author={author}
+                  year={year}
+                  episode={episode}
+                ></QuestionTag>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Buttons></Buttons>
       </div>
     </div>
   );
