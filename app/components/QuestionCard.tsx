@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
+import { getQuestion } from "@/lib/services/dailyQuestionService";
 import QuestionTag from "./QuestionTag";
 import Buttons from "./Buttons";
 
@@ -15,9 +15,8 @@ export default function QuestionCard() {
   const [showDetails, setShowDetails] = useState(false);
   useEffect(() => {
     const fetchQuestions = async () => {
-      const { data, error } = await supabase.from("questions").select();
+      const data = await getQuestion();
       if (!data || data.length === 0) {
-        console.log(error);
         return;
       }
       const randomNumber = Math.floor(Math.random() * data.length);
