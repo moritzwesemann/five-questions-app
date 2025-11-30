@@ -1,37 +1,32 @@
 import { supabase } from "@/lib/supabase/client";
 
 export async function getQuestion() {
-  const test = await getTodaysQuestions();
-  if (!test || test.length === 0) {
-    console.log("Inside the getQuestion Function and no data is here");
-  }
-  console.log("todays 5 questions");
-  console.log(test);
-
-  const { data, error } = await supabase.from("questions").select();
-
+  const data = await getTodaysQuestions();
   if (!data || data.length === 0) {
-    console.log(error);
+    console.log("Inside the getQuestion Function and no data is here");
     return;
   }
 
-  return data;
+  console.log(data);
+  const questionsArray = data.map((item) => item.questions);
+  console.log("todays 5 questions");
+  console.log(questionsArray);
+
+  return questionsArray;
 }
 
 async function getTodaysQuestions() {
   const today = new Date().toISOString().slice(0, 10);
-  console.log(today);
 
   const { data: todaysData, error } = await supabase
     .from("days")
     .select()
-    .eq("created_at", today); //change back to today
+    .eq("created_at", today);
 
   if (error) {
     console.error(error);
     return;
   }
-  console.log(todaysData);
   if (!todaysData || todaysData.length === 0) {
     console.log("We do not have an element for today yet");
 

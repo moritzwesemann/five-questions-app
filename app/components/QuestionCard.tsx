@@ -19,11 +19,12 @@ export default function QuestionCard() {
       if (!data || data.length === 0) {
         return;
       }
+      console.log(data);
       const randomNumber = Math.floor(Math.random() * data.length);
 
       setQuestion(data[randomNumber].question_english);
-      setEpisode(data[randomNumber].episode_number);
-      setYear(data[randomNumber].question_year);
+      setEpisode(String(data[randomNumber].episode_number));
+      setYear(String(data[randomNumber].question_year));
       setAuthor(data[randomNumber].source_name);
       setQuestionGerman(data[randomNumber].question_german);
     };
