@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase/client";
+import { updateTag } from "next/cache";
 
 export async function getQuestion() {
   const data = await getTodaysQuestions();
@@ -7,7 +8,6 @@ export async function getQuestion() {
     return;
   }
 
-  console.log(data);
   const questionsArray = data.map((item) => item.questions);
   console.log("todays 5 questions");
   console.log(questionsArray);
@@ -51,7 +51,7 @@ async function getTodaysQuestions() {
 
     const day_id = daysData.id;
 
-    await fillQuestions(day_id);
+    await fillQuestions(day_id, today);
     await getTodaysQuestions();
   }
 
@@ -70,7 +70,7 @@ async function getTodaysQuestions() {
   return dailyQuestions;
 }
 
-async function fillQuestions(day_id: string) {
+async function fillQuestions(day_id: string, today: string) {
   const { data, error } = await supabase
     .from("questions")
     .select()
@@ -92,6 +92,15 @@ async function fillQuestions(day_id: string) {
 
     if (connectError) {
       console.error(connectError);
+    }
+
+    const { error: updateQuestionError } = await supabase
+      .from("questions")
+      .update({ used_at: today })
+      .eq("id", question.id);
+
+    if (updateQuestionError) {
+      console.error(updateQuestionError);
     }
   }
 
