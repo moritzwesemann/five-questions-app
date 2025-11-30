@@ -64,8 +64,13 @@ async function getTodaysQuestions() {
 
   const { data: dailyQuestions, error: dailyQuestionsError } = await supabase
     .from("day_questions")
-    .select()
+    .select(`questions(*)`)
     .eq("day_id", day_id);
+
+  if (dailyQuestionsError) {
+    console.error(dailyQuestionsError);
+    return;
+  }
 
   return dailyQuestions;
 }
