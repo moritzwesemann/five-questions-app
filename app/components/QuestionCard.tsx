@@ -19,7 +19,6 @@ export default function QuestionCard() {
       if (!data || data.length === 0) {
         return;
       }
-      console.log(data);
       const randomNumber = Math.floor(Math.random() * data.length);
 
       setQuestion(data[randomNumber].question_english);

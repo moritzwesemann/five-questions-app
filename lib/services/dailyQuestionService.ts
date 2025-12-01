@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase/client";
-import { updateTag } from "next/cache";
+import { Question } from "../types";
 
-export async function getQuestion() {
+export async function getQuestion(): Promise<Question[] | undefined> {
   const data = await getTodaysQuestions();
   if (!data || data.length === 0) {
     console.log("Inside the getQuestion Function and no data is here");
@@ -9,13 +9,11 @@ export async function getQuestion() {
   }
 
   const questionsArray = data.map((item) => item.questions);
-  console.log("todays 5 questions");
-  console.log(questionsArray);
 
   return questionsArray;
 }
 
-async function getTodaysQuestions() {
+async function getTodaysQuestions(): Promise<any[] | undefined> {
   const today = new Date().toISOString().slice(0, 10);
 
   const { data: todaysData, error } = await supabase
@@ -28,7 +26,7 @@ async function getTodaysQuestions() {
     return;
   }
   if (!todaysData || todaysData.length === 0) {
-    console.log("We do not have an element for today yet");
+    console.error("We do not have an element for today yet");
 
     const { data: daysData, error: daysError } = await supabase
       .from("days")
@@ -39,8 +37,6 @@ async function getTodaysQuestions() {
     if (daysError) {
       console.error(daysError);
     }
-
-    console.log(daysData);
 
     if (!daysData) {
       console.error("Daysdata is empty");
@@ -103,6 +99,4 @@ async function fillQuestions(day_id: string, today: string) {
       console.error(updateQuestionError);
     }
   }
-
-  console.log(data);
 }
