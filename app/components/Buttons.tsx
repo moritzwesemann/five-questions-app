@@ -1,4 +1,9 @@
-export default function Buttons() {
+interface ButtonsProps {
+  onNext: () => void;
+  onPrevious: () => void;
+}
+
+export default function Buttons({ onNext, onPrevious }: ButtonsProps) {
   return (
     <div className="flex justify-center w-full text-sm">
       <div className="w-full space-y-2">
@@ -6,10 +11,16 @@ export default function Buttons() {
           Mark as used
         </button>
         <div className="w-full flex justify-between gap-2">
-          <button className="border rounded-full p-3 flex-1 bg-white border-gray-200 hover:border-gray-300 transition">
+          <button
+            onClick={onPrevious}
+            className="border rounded-full p-3 flex-1 bg-white border-gray-200 hover:border-gray-300 transition"
+          >
             &lt; Previous
           </button>
-          <button className="border rounded-full p-3 flex-1 bg-white border-gray-200 hover:border-gray-300 transition">
+          <button
+            onClick={onNext}
+            className="border rounded-full p-3 flex-1 bg-white border-gray-200 hover:border-gray-300 transition"
+          >
             Next &gt;
           </button>
         </div>
