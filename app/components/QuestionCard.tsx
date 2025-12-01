@@ -1,7 +1,11 @@
 "use client";
 import React from "react";
 import { useState, useEffect } from "react";
-import { getQuestion } from "@/lib/services/dailyQuestionService";
+import {
+  getQuestion,
+  markQuestionUsed,
+  markQuestionUnUsed,
+} from "@/lib/services/dailyQuestionService";
 import QuestionTag from "./QuestionTag";
 import Buttons from "./Buttons";
 import { Question } from "@/lib/types";
@@ -12,6 +16,7 @@ export default function QuestionCard() {
   const [showDetails, setShowDetails] = useState(false);
 
   const currentQuestion = questionsArray[currentIndex];
+  const isUsed = currentQuestion?.used_at !== null;
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -34,6 +39,21 @@ export default function QuestionCard() {
   const handlePrevious = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
+    }
+  };
+
+  const toggleMark = async () => {
+    if (!currentQuestion) return;
+
+    if (isUsed) {
+      markQuestionUnUsed(currentQuestion.id);
+    } else {
+      markQuestionUsed(currentQuestion.id);
+    }
+
+    const freshData = await getQuestion();
+    if (freshData) {
+      setQuestionsArray(freshData);
     }
   };
 
@@ -72,7 +92,12 @@ export default function QuestionCard() {
           )}
         </div>
 
-        <Buttons onNext={handleNext} onPrevious={handlePrevious}></Buttons>
+        <Buttons
+          onNext={handleNext}
+          onPrevious={handlePrevious}
+          isMarked={isUsed}
+          onToggleMark={toggleMark}
+        ></Buttons>
       </div>
     </div>
   );

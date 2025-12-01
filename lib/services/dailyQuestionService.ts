@@ -26,7 +26,7 @@ async function getTodaysQuestions(): Promise<any[] | undefined> {
     return;
   }
   if (!todaysData || todaysData.length === 0) {
-    console.error("We do not have an element for today yet");
+    console.log("We do not have an element for today yet");
 
     const { data: daysData, error: daysError } = await supabase
       .from("days")
@@ -48,7 +48,8 @@ async function getTodaysQuestions(): Promise<any[] | undefined> {
     const day_id = daysData.id;
 
     await fillQuestions(day_id, today);
-    await getTodaysQuestions();
+    const data = await getTodaysQuestions();
+    return data;
   }
 
   const day_id = todaysData[0].id;
@@ -89,14 +90,29 @@ async function fillQuestions(day_id: string, today: string) {
     if (connectError) {
       console.error(connectError);
     }
+  }
+}
 
-    const { error: updateQuestionError } = await supabase
-      .from("questions")
-      .update({ used_at: today })
-      .eq("id", question.id);
+export async function markQuestionUsed(id: string) {
+  const today = new Date().toISOString().slice(0, 10);
 
-    if (updateQuestionError) {
-      console.error(updateQuestionError);
-    }
+  const { error } = await supabase
+    .from("questions")
+    .update({ used_at: today })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+  }
+}
+
+export async function markQuestionUnUsed(id: string) {
+  const { error } = await supabase
+    .from("questions")
+    .update({ used_at: null })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
   }
 }
