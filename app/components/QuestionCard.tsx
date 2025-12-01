@@ -9,20 +9,10 @@ import { Question } from "@/lib/types";
 export default function QuestionCard() {
   const [questionsArray, setQuestionsArray] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const handleNext = () => {
-    if (currentIndex < 4) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
-
   const [showDetails, setShowDetails] = useState(false);
+
+  const currentQuestion = questionsArray[currentIndex];
+
   useEffect(() => {
     const fetchQuestions = async () => {
       const data = await getQuestion();
@@ -35,7 +25,17 @@ export default function QuestionCard() {
     fetchQuestions();
   }, []);
 
-  const currentQuestion = questionsArray[currentIndex];
+  const handleNext = () => {
+    if (currentIndex < 4) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6">
